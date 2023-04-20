@@ -1,0 +1,88 @@
+main = [ :a2,:cs3,:a3,:b3,:cs4,:b3,:a3,:e3,:d3,:f3,:cs4,:e4,:cs4,:a3]
+use_bpm 74
+use_synth :piano
+x=0
+y=0
+define :mainnotes do
+  live_loop :mn do
+    10.times do
+      14.times do
+        play main[x]
+        sleep 0.5
+        x=x+1
+      end
+      x=0
+      sleep 1
+    end
+    stop
+  end
+end
+define :main_melody do |a,b,c,d,e,f,g,h,i|
+  play a,sustain: 2,amp:3
+  sleep 3
+  play b,amp:3
+  sleep 1
+  play c,sustain: 2,amp:3
+  sleep 3
+  play d,amp:3
+  sleep 0.5
+  play e,amp:3
+  sleep 0.5
+  play f,amp:3
+  sleep 3
+  play g,amp:3
+  sleep 0.5
+  play h,amp:3
+  sleep 1
+  play i,amp:3
+  sleep 3.5 ######
+end
+define :synths do
+  live_loop :syn do
+    use_synth :blade
+    2.times do
+      play :gs4,sustain: 3.5
+      sleep 4
+      play :fs4,sustain: 3.5
+      sleep 4
+      play :gs4,sustain: 2.5
+      sleep 3
+      play :b4
+      sleep 0.5
+      play :cs5
+      sleep 1
+      play :fs4
+      sleep 3.5
+    end
+    stop
+  end
+end
+define :drummup do
+  y = 0
+  16.times do
+    sample :drum_snare_hard,amp:y
+    sleep 0.25
+    y = y + 0.05
+  end
+  16.times do
+    sample :drum_snare_hard,amp:y
+    sleep 0.25
+    y = y - 0.05
+  end
+end
+
+mainnotes
+sleep 16
+main_melody :gs4, :a4, :fs4, :e4, :fs4, :gs4, :b4, :cs5, :f4
+main_melody :gs3, :a3, :fs3, :e3, :fs3, :gs3, :b3, :cs4, :f3
+synths
+live_loop :melodyplay do
+  1.times do
+    main_melody :gs4, :a4, :fs4, :e4, :fs4, :gs4, :b4, :cs5, :f4
+  end
+  stop
+end
+sleep 8
+drummup
+sleep 2
+main_melody :gs3, :a3, :fs3, :e3, :fs3, :gs3, :b3, :cs4, :f3
